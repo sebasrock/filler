@@ -40,12 +40,19 @@ func (c *Config) readStruct(value reflect.Value) (err error) {
 		}
 
 		field = createInfancyPtr(field)
-
-		if field.Kind() == reflect.Struct {
+		switch field.Kind() {
+		case reflect.Struct:
 			err = c.readStruct(field)
-		} else {
+		case reflect.Interface:
+			if field.Elem().Kind() == reflect.Struct {
+				fieldNew := reflect.New(field.Elem().Type())
+				err = c.readStruct(fieldNew.Elem())
+				field.Set(fieldNew)
+			}
+		default:
 			err = c.setField(&field, ctx)
 		}
+
 		if err != nil {
 			return err
 		}
@@ -66,8 +73,8 @@ func parseValue(v *reflect.Value, str string) error {
 	var err error = nil
 	valueType := v.Type()
 
-	if strings.TrimSpace(str) == "" && v.Kind() != reflect.String {
-		fmt.Printf("load-config: unset value")
+	if strings.TrimSpace(str) == "" && valueType.Kind() != reflect.String {
+		fmt.Println("load-config: unset value ")
 		return nil
 	}
 
