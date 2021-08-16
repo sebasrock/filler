@@ -54,7 +54,7 @@ type (
 	DB struct {
 		URL          string        `ssm:"/base-path/second-path/value"`
 		Username     string        `envconfig:"DB_USER,optional" ssm:"/base-path/second-path/valueTwo"`
-		Password     string        `yaml:"password" envconfig:"DB_PASS,optional"`
+		Password     string        `yml:"password" envconfig:"DB_PASS,optional"`
 	}
 	Server struct {
 		Port    string        `envconfig:"SERVER_PORT,optional"`
