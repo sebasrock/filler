@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// context is represent the basic information need for process a field with a tag
+// Config context is represented the basic information need for process a field with a tag
 type Config struct {
 	providers []ProviderByTag
 }
