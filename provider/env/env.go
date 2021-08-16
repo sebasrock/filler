@@ -33,6 +33,10 @@ func (p *EnvProvider) Execute(ctx *config.Context) (string, error) {
 		str := os.Getenv(envTag.customName)
 		if strings.TrimSpace(envTag.defaultVal) != "" && strings.TrimSpace(str) == "" {
 			str = envTag.defaultVal
+			err := os.Setenv(envTag.customName, envTag.defaultVal)
+			if err != nil {
+				return "", err
+			}
 		}
 		if !envTag.optional && strings.TrimSpace(str) == "" {
 			return "", fmt.Errorf("env-provider: The %s is required", envTag.customName)
